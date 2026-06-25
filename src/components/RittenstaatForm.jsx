@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import SignatureDialog from './SignatureDialog';
 import ActionDialog from './ActionDialog';
+import { v4 as uuidv4 } from 'uuid';
 import './RittenstaatForm.css';
 
 const TrashIcon = () => (
@@ -87,7 +88,7 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend }) {
   }, [pakbonnen]);
 
   const createEmptyPakbon = () => ({
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     chauffeur: '',
     kenteken: '',
     scheepsnaam: '',

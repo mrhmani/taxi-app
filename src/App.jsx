@@ -5,6 +5,7 @@ import Navigation from './components/Navigation';
 import MyTripLogs from './components/MyTripLogs';
 import ActionDialog from './components/ActionDialog';
 import { supabase } from './supabase';
+import { v4 as uuidv4 } from 'uuid';
 import './index.css';
 
 // Helper to validate UUID format
@@ -54,7 +55,7 @@ const mapDbFormToState = (dbForm) => ({
 });
 
 const mapStateToDbForm = (stateForm, userId) => ({
-  id: isValidUUID(stateForm.id) ? stateForm.id : crypto.randomUUID(),
+  id: isValidUUID(stateForm.id) ? stateForm.id : uuidv4(),
   user_id: userId,
   status: stateForm.status || 'saved',
   submitted_at: stateForm.submittedAt || null,
@@ -74,7 +75,7 @@ const mapStateToDbForm = (stateForm, userId) => ({
 });
 
 const mapStateToDbPakbon = (statePakbon, formId, userId) => ({
-  id: isValidUUID(statePakbon.id) ? statePakbon.id : crypto.randomUUID(),
+  id: isValidUUID(statePakbon.id) ? statePakbon.id : uuidv4(),
   form_id: formId,
   user_id: userId,
   chauffeur: statePakbon.chauffeur || null,
@@ -222,7 +223,7 @@ function App() {
     // Determine the form ID
     const formId = logData.id && isValidUUID(logData.id) 
       ? logData.id 
-      : crypto.randomUUID();
+      : uuidv4();
 
     const localLog = {
       ...logData,
@@ -374,7 +375,7 @@ function App() {
         const now = new Date().toISOString();
         const formId = logData.id && isValidUUID(logData.id) 
           ? logData.id 
-          : crypto.randomUUID();
+          : uuidv4();
 
         const localLog = {
           ...logData,
