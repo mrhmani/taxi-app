@@ -1,0 +1,228 @@
+.main-navigation {
+  background-color: var(--primary-white);
+  border-bottom: 2px solid var(--primary-yellow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 15px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.nav-logo {
+  height: 48px;
+  width: auto;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: var(--transition-btn), color 0.2s ease;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  min-width: 170px;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.nav-link:hover {
+  background-color: var(--bg-gray);
+  color: var(--primary-black);
+}
+
+.nav-link.active {
+  background-color: var(--bg-gray);
+  color: var(--primary-black);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.logout-btn {
+  background-color: var(--primary-yellow);
+  color: var(--primary-black);
+  border: none;
+  padding: 8px 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition-btn);
+  min-height: auto;
+}
+
+.logout-btn:hover {
+  background-color: #dfa400;
+}
+
+@media (max-width: 600px) {
+  .nav-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .nav-brand {
+    justify-content: center;
+  }
+
+  .nav-right {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    height: 48px; /* Matches the nav-logo height */
+    display: flex;
+    align-items: center;
+  }
+
+  .logout-btn {
+    width: auto;
+  }
+}
+
+/* Modal styles (aligned with ActionDialog) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  padding: 20px;
+  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-content {
+  background-color: var(--primary-white);
+  padding: 35px 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  outline: none;
+  animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.modal-warning-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-warning-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.modal-message {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 28px;
+  line-height: 1.4;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  min-height: 44px;
+  cursor: pointer;
+  transition: var(--transition-btn);
+  border: 1px solid var(--border-color);
+  background-color: var(--primary-white);
+  color: var(--primary-black);
+}
+
+.modal-btn:hover {
+  background-color: var(--primary-yellow);
+  border-color: var(--primary-yellow);
+  color: var(--primary-black);
+}
+
+.modal-btn:active {
+  background-color: var(--primary-white);
+  border-color: var(--border-color);
+  color: var(--primary-black);
+}
+
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalScaleIn {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

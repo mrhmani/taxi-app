@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary-yellow: #f4b400;
+  --primary-black: #000000;
+  --primary-white: #ffffff;
+  --bg-gray: #f8f9fa;
+  --border-color: #e0e0e0;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  
+  /* Modern interaction transitions */
+  --transition-btn: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Barlow', 'Inter', 'Roboto', 'Helvetica Neue', sans-serif;
+  background-color: var(--bg-gray);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-y: scroll;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-black);
+  font-weight: 600;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Global Button Interactions */
+button {
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition-btn);
+  outline: none;
+}
+
+/* Tactile Hover State (Desktop only) */
+@media (hover: hover) {
+  button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Tactile Active / Depressed State */
+button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.97);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Modern Professional Focus State */
+button:focus-visible {
+  outline: 3px solid rgba(244, 180, 0, 0.5);
+  outline-offset: 1px;
+}
+
+/* Disabled State Reset */
+button:disabled {
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+

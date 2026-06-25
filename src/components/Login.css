@@ -1,0 +1,240 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-gray);
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--primary-white);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-logo {
+  max-width: 200px;
+  height: auto;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--primary-black);
+}
+
+.login-form .form-group {
+  margin-bottom: 20px;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.login-form input {
+  font-family: inherit;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+  width: 100%;
+  min-height: 44px;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: var(--primary-yellow);
+  box-shadow: 0 0 0 2px rgba(244, 180, 0, 0.2);
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 10px;
+  background-color: var(--primary-yellow);
+  color: var(--primary-black);
+  font-weight: 600;
+  padding: 12px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition-btn);
+  border: none;
+  border-radius: 4px;
+  min-height: 44px;
+}
+
+.login-btn:hover {
+  background-color: #dfa400;
+}
+
+.welcome-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.welcome-header .login-title {
+  margin-bottom: 8px;
+}
+
+.welcome-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  cursor: pointer;
+  padding: 10px 0;
+  text-decoration: none;
+  font-family: inherit;
+  transition: var(--transition-btn);
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  min-height: 44px;
+}
+
+.forgot-password-link:hover {
+  color: #dfa400;
+}
+
+.contact-dispatch {
+  margin-top: 20px;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+}
+
+.contact-dispatch-text {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.back-to-login-btn {
+  width: 100%;
+  margin-top: 10px;
+  background-color: transparent;
+  color: var(--text-primary);
+  font-weight: 600;
+  padding: 12px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition-btn);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  min-height: 44px;
+}
+
+.back-to-login-btn:hover {
+  background-color: var(--bg-gray);
+  border-color: var(--text-primary);
+}
+
+/* Local inline validation styling */
+.login-form input.input-error {
+  border-color: #dc3545;
+}
+
+.login-form input.input-error:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2);
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.825rem;
+  margin-top: 6px;
+  display: block;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* Loading Spinner Style */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  border-top-color: var(--primary-black);
+  animation: spin 1s ease-in-out infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Success Checkmark Classes & Keyframes */
+.success-icon-container {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+}
+
+.success-checkmark {
+  width: 80px;
+  height: 80px;
+  display: block;
+}
+
+.success-checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #10b981;
+  fill: none;
+  animation: strokeCircle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.success-checkmark-check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke: #10b981;
+  fill: none;
+  animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+}
+
+@keyframes strokeCircle {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes strokeCheck {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Processing Form Fields & Button States */
+input:disabled,
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
