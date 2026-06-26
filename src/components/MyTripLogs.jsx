@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { downloadPdf } from '../utils/pdfGenerator';
 import './MyTripLogs.css';
 
 function MyTripLogs({ logs, onOpen, onDelete, onDeleteMultiple, onSubmit }) {
@@ -56,17 +57,15 @@ function MyTripLogs({ logs, onOpen, onDelete, onDeleteMultiple, onSubmit }) {
               <div className="log-card-content">
                 <div className="log-card-header">
                   <div className="log-card-header-left">
-                    {logs.length > 1 && (
-                      <div className="log-card-select-wrapper">
-                        <input
-                          type="checkbox"
-                          className="log-card-checkbox"
-                          checked={isSelected}
-                          onChange={() => handleToggleSelect(log.id)}
-                          aria-label="Selecteer rittenstaat"
-                        />
-                      </div>
-                    )}
+                    <div className="log-card-select-wrapper">
+                      <input
+                        type="checkbox"
+                        className="log-card-checkbox"
+                        checked={isSelected}
+                        onChange={() => handleToggleSelect(log.id)}
+                        aria-label="Selecteer rittenstaat"
+                      />
+                    </div>
                     <div className="header-title-group">
                       <h3>
                         {log.datum ? new Date(log.datum).toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Onbekende datum'}
@@ -152,6 +151,12 @@ function MyTripLogs({ logs, onOpen, onDelete, onDeleteMultiple, onSubmit }) {
             </span>
           </div>
           <div className="toolbar-buttons">
+            <button className="toolbar-btn pdf-btn" onClick={() => {
+              const selectedLogs = sortedLogs.filter(log => selectedIds.includes(log.id));
+              downloadPdf(selectedLogs, `rittenstaten-${new Date().toISOString().split('T')[0]}.pdf`);
+            }}>
+              Download als PDF
+            </button>
             <button className="toolbar-btn select-all-btn" onClick={handleToggleSelectAll}>
               {selectedIds.length === sortedLogs.length ? 'Deselecteer alles' : 'Selecteer alles'}
             </button>

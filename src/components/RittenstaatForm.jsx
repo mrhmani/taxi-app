@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import SignatureDialog from './SignatureDialog';
 import ActionDialog from './ActionDialog';
 import { v4 as uuidv4 } from 'uuid';
+import { downloadPdf, downloadPakbonPdf } from '../utils/pdfGenerator';
 import './RittenstaatForm.css';
 
 const TrashIcon = () => (
@@ -589,10 +590,28 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend, onFormChange })
 
       {/* PAKBONNEN */}
       {pakbonnen.map((pakbon) => (
-        <div key={pakbon.id} className="paper-document pakbon-document">
-          <button className="remove-pakbon-btn" onClick={() => confirmRemovePakbon(pakbon.id)} title="Pakbon verwijderen" aria-label="Pakbon verwijderen">
-            <TrashIcon />
-          </button>
+        <div key={pakbon.id} className="paper-document pakbon-document" style={{ position: 'relative' }}>
+          <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', gap: '8px', zIndex: 10 }}>
+            <button 
+              type="button"
+              className="app-btn app-btn-secondary" 
+              style={{ padding: '6px 12px', fontSize: '12px', height: '36px', display: 'flex', alignItems: 'center' }}
+              onClick={() => downloadPakbonPdf(pakbon, `pakbon-${pakbon.datum || new Date().toISOString().split('T')[0]}.pdf`)}
+              title="Download Pakbon als PDF"
+            >
+              PDF
+            </button>
+            <button 
+              type="button"
+              className="remove-pakbon-btn" 
+              style={{ position: 'relative', top: '0', right: '0' }}
+              onClick={() => confirmRemovePakbon(pakbon.id)} 
+              title="Pakbon verwijderen" 
+              aria-label="Pakbon verwijderen"
+            >
+              <TrashIcon />
+            </button>
+          </div>
           
           <div className="pakbon-header">
             <div className="pakbon-header-left">
@@ -696,6 +715,9 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend, onFormChange })
       {/* ACTION BUTTONS (Outside Paper, directly below document) */}
       <div className="action-buttons-bar">
         <button className="app-btn app-btn-secondary" onClick={handleResetClick}>Rittenstaat Wissen</button>
+        <button className="app-btn app-btn-secondary" onClick={() => {
+          downloadPdf([compileLogData()], `document-${headerRight.datum || new Date().toISOString().split('T')[0]}.pdf`);
+        }}>Download als PDF</button>
         <button className="app-btn app-btn-secondary" onClick={handleSaveClick}>Rittenstaat Opslaan</button>
         <button className="app-btn app-btn-secondary" onClick={handleSendClick}>Rittenstaat Verzenden</button>
       </div>
