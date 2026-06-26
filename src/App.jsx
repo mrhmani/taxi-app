@@ -662,6 +662,54 @@ function App() {
     });
   };
 
+  const handleDeleteLogs = (ids) => {
+    if (!ids || ids.length === 0) return;
+    const count = ids.length;
+
+    setActiveDialog({
+      type: 'confirm',
+      message: `Are you sure you want to permanently delete ${count} selected trip logs?`,
+      onConfirm: async () => {
+        // 1. Delete locally first
+        const updatedLogs = logs.filter(log => !ids.includes(log.id));
+        setLogs(updatedLogs);
+
+        setActiveDialog({
+          type: 'success',
+          message: 'Rittenstaten lokaal verwijderd. Cloud synchroniseren...',
+          onConfirm: () => setActiveDialog(null)
+        });
+
+        // 2. Perform background deletion in Supabase if UUID exists
+        try {
+          const validUUIDs = ids.filter(isValidUUID);
+          if (validUUIDs.length > 0) {
+            const { error } = await supabase
+              .from('forms')
+              .delete()
+              .in('id', validUUIDs);
+
+            if (error) throw error;
+          }
+
+          setActiveDialog({
+            type: 'success',
+            message: 'Trip logs successfully deleted.',
+            onConfirm: () => setActiveDialog(null)
+          });
+        } catch (err) {
+          console.error('Supabase deletion sync failed:', err.message);
+          setActiveDialog({
+            type: 'error',
+            message: `Lokaal verwijderd. Cloud-verwijdering mislukt: ${err.message}.`,
+            onConfirm: () => setActiveDialog(null)
+          });
+        }
+      },
+      onCancel: () => setActiveDialog(null)
+    });
+  };
+
   return (
     <div className="app-container">
       {!isLoggedIn || isRecovering ? (
@@ -693,6 +741,7 @@ function App() {
                 logs={logs} 
                 onOpen={handleOpenLog} 
                 onDelete={handleDeleteLog}
+                onDeleteMultiple={handleDeleteLogs}
                 onSubmit={handleSubmitLog}
                 onNavigateHome={() => handleViewChange('home')}
               />

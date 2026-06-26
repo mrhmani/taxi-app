@@ -306,3 +306,198 @@
     margin: 0;
   }
 }
+
+/* Custom Checkbox Selection */
+.log-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.log-card-select-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.log-card-checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background-color: var(--primary-white);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+.log-card-checkbox:hover {
+  border-color: var(--primary-yellow);
+  transform: scale(1.08);
+}
+
+.log-card-checkbox:checked {
+  background-color: var(--primary-yellow);
+  border-color: var(--primary-yellow);
+}
+
+.log-card-checkbox:checked::after {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 10px;
+  border: solid var(--primary-black);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 3px;
+  left: 6px;
+}
+
+.log-card-checkbox:focus-visible {
+  outline: 2px solid rgba(244, 180, 0, 0.5);
+  outline-offset: 2px;
+}
+
+/* Selected Card Highlight */
+.log-card.selected {
+  border-color: var(--primary-yellow);
+  box-shadow: 0 4px 14px rgba(244, 180, 0, 0.15);
+}
+
+/* Floating Bulk Action Bar */
+.bulk-actions-toolbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  padding: 12px 24px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  width: 90%;
+  max-width: 600px;
+  animation: slideUp MyTripLogsToolbarSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+@keyframes MyTripLogsToolbarSlideUp {
+  from {
+    transform: translate(-50%, 80px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.selected-count {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.selected-count strong {
+  background-color: var(--primary-yellow);
+  color: var(--primary-black);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  margin-right: 6px;
+  display: inline-block;
+}
+
+.toolbar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-btn {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-btn);
+}
+
+.toolbar-btn.select-all-btn {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.toolbar-btn.select-all-btn:hover {
+  background-color: var(--bg-gray);
+  border-color: #cccccc;
+}
+
+.toolbar-btn.cancel-btn {
+  background-color: transparent;
+  color: var(--text-secondary);
+}
+
+.toolbar-btn.cancel-btn:hover {
+  background-color: var(--bg-gray);
+  color: var(--text-primary);
+}
+
+.toolbar-btn.delete-btn {
+  background-color: #dc3545;
+  color: var(--primary-white);
+}
+
+.toolbar-btn.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.toolbar-btn.delete-btn:active {
+  background-color: #bd2130;
+}
+
+/* Responsive Layout for Mobile */
+@media (max-width: 580px) {
+  .bulk-actions-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+    bottom: 16px;
+    border-radius: 12px;
+  }
+  .toolbar-info {
+    text-align: center;
+  }
+  .toolbar-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .toolbar-btn {
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+}
