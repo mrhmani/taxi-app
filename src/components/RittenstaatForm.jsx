@@ -63,12 +63,58 @@ const REQUIRED_FIELDS = [
   { key: 'werktijdTot', label: 'Tot' }
 ];
 
-function RittenstaatForm({ initialData, onSave, onReset, onSend }) {
-  const [headerLeft, setHeaderLeft] = useState(DEFAULT_HEADER_LEFT);
-  const [headerRight, setHeaderRight] = useState(DEFAULT_HEADER_RIGHT);
-  const [trips, setTrips] = useState(() => createDefaultTrips(17));
-  const [signature, setSignature] = useState(null);
-  const [pakbonnen, setPakbonnen] = useState([]);
+function RittenstaatForm({ initialData, onSave, onReset, onSend, onFormChange }) {
+  const [headerLeft, setHeaderLeft] = useState(() => {
+    if (initialData) {
+      return {
+        kmStandBegin: initialData.kmStandBegin || '',
+        kmStandEind: initialData.kmStandEind || '',
+        litersGetankt: initialData.litersGetankt || '',
+        ruimteKantoor: initialData.ruimteKantoor || ''
+      };
+    }
+    return DEFAULT_HEADER_LEFT;
+  });
+
+  const [headerRight, setHeaderRight] = useState(() => {
+    if (initialData) {
+      return {
+        wagenNummer: initialData.wagenNummer || '',
+        kenteken: initialData.kenteken || '',
+        naam: initialData.naam || '',
+        datum: initialData.datum || '',
+        dag: initialData.dag || '',
+        werktijdVan: initialData.werktijdVan || '',
+        werktijdTot: initialData.werktijdTot || ''
+      };
+    }
+    return DEFAULT_HEADER_RIGHT;
+  });
+
+  const [trips, setTrips] = useState(() => {
+    if (initialData && initialData.trips && initialData.trips.length > 0) {
+      const loadedTrips = initialData.trips.map((t, idx) => ({
+        ...t,
+        id: t.id || `loaded-${idx}-${Math.random()}`
+      }));
+      if (loadedTrips.length < 17) {
+        const padCount = 17 - loadedTrips.length;
+        const padded = createDefaultTrips(padCount);
+        return [...loadedTrips, ...padded];
+      }
+      return loadedTrips;
+    }
+    return createDefaultTrips(17);
+  });
+
+  const [signature, setSignature] = useState(() => initialData?.signature || null);
+  const [pakbonnen, setPakbonnen] = useState(() => initialData?.pakbonnen || []);
+
+  const [formId, setFormId] = useState(() => initialData?.id || uuidv4());
+  const [dateCreated, setDateCreated] = useState(() => initialData?.dateCreated || null);
+  const [status, setStatus] = useState(() => initialData?.status || null);
+  const [submittedAt, setSubmittedAt] = useState(() => initialData?.submittedAt || null);
+
   const [errors, setErrors] = useState({});
   const [signatureTarget, setSignatureTarget] = useState(null); // 'rittenstaat' or pakbon.id
   const [activeDialog, setActiveDialog] = useState(null);
@@ -102,7 +148,24 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend }) {
     ritprijs: ''
   });
 
-  // Initialize data
+  // Notify parent App on any state change for auto-saving to Supabase
+  useEffect(() => {
+    if (onFormChange) {
+      onFormChange({
+        ...headerLeft,
+        ...headerRight,
+        trips: trips.map((t, i) => ({ ...t, ritNr: i + 1 })),
+        signature,
+        pakbonnen,
+        id: formId,
+        dateCreated,
+        status,
+        submittedAt
+      });
+    }
+  }, [headerLeft, headerRight, trips, signature, pakbonnen, formId, dateCreated, status, submittedAt, onFormChange]);
+
+  // Initialize data when editing/opening an existing log
   useEffect(() => {
     if (initialData) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -136,14 +199,13 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend }) {
       } else {
         setTrips(createDefaultTrips(17));
       }
-      if (initialData.signature) {
-        setSignature(initialData.signature);
-      }
-      if (initialData.pakbonnen) {
-        setPakbonnen(initialData.pakbonnen);
-      } else {
-        setPakbonnen([]);
-      }
+      setSignature(initialData.signature || null);
+      setPakbonnen(initialData.pakbonnen || []);
+      setFormId(initialData.id || null);
+      setDateCreated(initialData.dateCreated || null);
+      setStatus(initialData.status || null);
+      setSubmittedAt(initialData.submittedAt || null);
+      setErrors({});
     }
   }, [initialData]);
 
@@ -238,12 +300,10 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend }) {
       trips: trips.map((t, i) => ({ ...t, ritNr: i + 1 })), // Automatically set ritNr
       signature,
       pakbonnen,
-      ...(initialData && { 
-        id: initialData.id, 
-        dateCreated: initialData.dateCreated,
-        status: initialData.status,
-        submittedAt: initialData.submittedAt
-      })
+      id: formId,
+      dateCreated,
+      status,
+      submittedAt
     };
   };
 
@@ -262,14 +322,7 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend }) {
   };
 
   const handleResetClick = () => {
-    setHeaderLeft(DEFAULT_HEADER_LEFT);
-    setHeaderRight(DEFAULT_HEADER_RIGHT);
-    setTrips(createDefaultTrips(17));
-    setSignature(null);
-    setPakbonnen([]);
-    setErrors({});
     onReset();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSaveSignature = (sigData) => {
@@ -642,7 +695,7 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend }) {
 
       {/* ACTION BUTTONS (Outside Paper, directly below document) */}
       <div className="action-buttons-bar">
-        <button className="app-btn app-btn-secondary" onClick={handleResetClick}>Rittenstaat Resetten</button>
+        <button className="app-btn app-btn-secondary" onClick={handleResetClick}>Rittenstaat Wissen</button>
         <button className="app-btn app-btn-secondary" onClick={handleSaveClick}>Rittenstaat Opslaan</button>
         <button className="app-btn app-btn-secondary" onClick={handleSendClick}>Rittenstaat Verzenden</button>
       </div>

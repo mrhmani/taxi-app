@@ -100,26 +100,20 @@ function App() {
   const [currentView, setCurrentView] = useState(() => {
     return localStorage.getItem('taxilivo_current_view') || 'home';
   }); // 'home' or 'logs'
-  const [currentLog, setCurrentLog] = useState(null);
+  const [currentLog, setCurrentLog] = useState(() => {
+    try {
+      const draft = localStorage.getItem('taxilivo_draft');
+      return draft ? JSON.parse(draft) : null;
+    } catch (e) {
+      console.error('Failed to parse draft from local storage', e);
+      return null;
+    }
+  });
   const [formResetIndex, setFormResetIndex] = useState(0);
   const [activeDialog, setActiveDialog] = useState(null);
-  const [logs, setLogs] = useState(() => {
-    const savedLogs = localStorage.getItem('taxilivo_trip_logs');
-    if (savedLogs) {
-      try {
-        return JSON.parse(savedLogs);
-      } catch (error) {
-        console.error('Failed to parse logs from local storage', error);
-        return [];
-      }
-    }
-    return [];
-  });
+  const [logs, setLogs] = useState([]);
 
-  // Save logs to local storage whenever they change (serves as the requested fallback cache)
-  useEffect(() => {
-    localStorage.setItem('taxilivo_trip_logs', JSON.stringify(logs));
-  }, [logs]);
+
 
   // Persist current view
   useEffect(() => {
@@ -212,8 +206,23 @@ function App() {
 
   const handleViewChange = (view) => {
     setCurrentView(view);
-    if (view === 'home' && currentLog) {
-      setCurrentLog(null);
+    if (view === 'home') {
+      try {
+        const draft = localStorage.getItem('taxilivo_draft');
+        if (draft) {
+          setCurrentLog(JSON.parse(draft));
+        }
+      } catch (e) {
+        console.error('Failed to restore draft on navigation', e);
+      }
+    }
+  };
+
+  const handleFormChange = (logData) => {
+    try {
+      localStorage.setItem('taxilivo_draft', JSON.stringify(logData));
+    } catch (e) {
+      console.error('Failed to save draft to local storage', e);
     }
   };
 
@@ -340,7 +349,6 @@ function App() {
       });
     }
 
-    setCurrentLog(null);
     setCurrentView('home');
   };
 
@@ -349,6 +357,7 @@ function App() {
       type: 'confirm',
       message: 'Are you sure you want to reset this rittenstaat?',
       onConfirm: () => {
+        localStorage.removeItem('taxilivo_draft');
         setCurrentLog(null);
         setFormResetIndex(prev => prev + 1);
         setActiveDialog({
@@ -476,7 +485,6 @@ function App() {
           });
         }
 
-        setCurrentLog(null);
         setCurrentView('home');
       },
       onCancel: () => setActiveDialog(null)
@@ -601,6 +609,11 @@ function App() {
   };
 
   const handleOpenLog = (log) => {
+    try {
+      localStorage.setItem('taxilivo_draft', JSON.stringify(log));
+    } catch (e) {
+      console.error('Failed to save draft on open log', e);
+    }
     setCurrentLog(log);
     setCurrentView('home');
   };
@@ -673,6 +686,7 @@ function App() {
                 onSave={handleSaveLog} 
                 onReset={handleResetLog}
                 onSend={handleSendLog}
+                onFormChange={handleFormChange}
               />
             ) : (
               <MyTripLogs 
