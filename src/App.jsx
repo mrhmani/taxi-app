@@ -6,6 +6,7 @@ import MyTripLogs from './components/MyTripLogs';
 import ActionDialog from './components/ActionDialog';
 import { supabase } from './supabase';
 import { v4 as uuidv4 } from 'uuid';
+import { generatePdfBlob } from './utils/pdfGenerator';
 import './index.css';
 
 // Helper to validate UUID format
@@ -370,46 +371,88 @@ function App() {
     });
   };
 
-  // Dedicated submission service helper (for future email delivery integration)
+  // Dedicated submission service helper (for email delivery integration via Resend Edge Function)
   const submitTripLog = async (logData) => {
-    console.log('Sending trip log email to info@taxilivo.nl:', logData);
-    return true;
+    try {
+      console.log('Generating PDF for submission...');
+      // 1. Generate PDF blob from the log data
+      const pdfBlob = await generatePdfBlob([logData]);
+      
+      // 2. Prepare FormData to send binary file without base64 overhead in client
+      const formData = new FormData();
+      const fileName = `rittenstaat-${logData.datum || new Date().toISOString().split('T')[0]}.pdf`;
+      formData.append('pdf', pdfBlob, fileName);
+      
+      // Append metadata for dynamic email customization on server-side
+      formData.append('wagenNummer', logData.wagenNummer || 'Onbekend');
+      formData.append('naam', logData.naam || 'Onbekend');
+      formData.append('datum', logData.datum || 'Onbekend');
+
+      console.log('Invoking Supabase Edge Function to send email...');
+      const { data, error } = await supabase.functions.invoke('send-email', {
+        body: formData,
+      });
+
+      if (error) {
+        throw new Error(error.message || JSON.stringify(error));
+      }
+
+      if (data && data.success === false) {
+        throw new Error(data.error || 'Verzending is mislukt.');
+      }
+
+      console.log('Email successfully sent:', data);
+      return true;
+    } catch (err) {
+      console.error('Error submitting trip log:', err);
+      throw err;
+    }
   };
 
   const handleSendLog = (logData) => {
     setActiveDialog({
       type: 'confirm',
-      message: 'Are you sure you want to submit this rittenstaat?',
+      message: 'Weet je zeker dat je deze rittenstaat wilt verzenden?',
       onConfirm: async () => {
-        const now = new Date().toISOString();
-        const formId = logData.id && isValidUUID(logData.id) 
-          ? logData.id 
-          : uuidv4();
-
-        const localLog = {
-          ...logData,
-          id: formId,
-          status: 'submitted',
-          dateCreated: logData.dateCreated || now,
-          dateModified: now,
-          submittedAt: now
-        };
-
-        // 1. Update locally first
-        const updatedLogs = logs.some(log => log.id === logData.id)
-          ? logs.map(log => log.id === logData.id ? localLog : log)
-          : [...logs, localLog];
-        
-        setLogs(updatedLogs);
-
+        // Show loading state dialog
         setActiveDialog({
           type: 'success',
-          message: 'Rittenstaat lokaal ingezonden. Cloud synchroniseren...',
-          onConfirm: () => setActiveDialog(null)
+          message: 'Bezig met genereren van PDF en verzenden van e-mail...',
+          onConfirm: null
         });
 
-        // 2. Perform background sync with Supabase
         try {
+          const now = new Date().toISOString();
+          const formId = logData.id && isValidUUID(logData.id) 
+            ? logData.id 
+            : uuidv4();
+
+          // Compile compiledLog structure
+          const compiledLog = {
+            ...logData,
+            id: formId,
+            dateCreated: logData.dateCreated || now,
+            dateModified: now
+          };
+
+          // 1. Trigger email submission first
+          await submitTripLog(compiledLog);
+
+          // 2. E-mail successful! Now mark status as submitted
+          const localLog = {
+            ...compiledLog,
+            status: 'submitted',
+            submittedAt: now
+          };
+
+          // Update React state
+          const updatedLogs = logs.some(log => log.id === logData.id)
+            ? logs.map(log => log.id === logData.id ? localLog : log)
+            : [...logs, localLog];
+          
+          setLogs(updatedLogs);
+
+          // 3. Perform background sync with Supabase with status 'submitted'
           const { data: { user } } = await supabase.auth.getUser();
           if (!user) throw new Error('Geen actieve gebruiker gevonden.');
 
@@ -469,18 +512,20 @@ function App() {
             ));
           }
 
-          await submitTripLog(localLog);
+          // Clear local draft upon success
+          localStorage.removeItem('taxilivo_draft');
+          setCurrentLog(null);
 
           setActiveDialog({
             type: 'success',
-            message: 'Rittenstaat succesvol ingezonden en gesynchroniseerd.',
+            message: 'Rittenstaat succesvol verzonden.',
             onConfirm: () => setActiveDialog(null)
           });
         } catch (err) {
-          console.error('Supabase sync failed (using localStorage fallback):', err.message);
+          console.error('Verzending mislukt:', err);
           setActiveDialog({
             type: 'error',
-            message: `Lokaal ingezonden. Cloud synchronisatie mislukt: ${err.message}. Probeer het later opnieuw.`,
+            message: `Verzenden mislukt: ${err.message || err}. De status is ongewijzigd gebleven en uw wijzigingen zijn als concept behouden.`,
             onConfirm: () => setActiveDialog(null)
           });
         }
@@ -495,27 +540,28 @@ function App() {
     const formattedDate = new Date(log.datum || log.dateCreated).toLocaleDateString('nl-NL');
     setActiveDialog({
       type: 'confirm',
-      message: `Are you sure you want to submit the trip log dated ${formattedDate}?`,
+      message: `Weet je zeker dat je de rittenstaat van ${formattedDate} wilt verzenden?`,
       onConfirm: async () => {
-        const now = new Date().toISOString();
-        
-        const localLog = {
-          ...log,
-          status: 'submitted',
-          submittedAt: now,
-          dateModified: now
-        };
-
-        const updatedLogs = logs.map(l => l.id === log.id ? localLog : l);
-        setLogs(updatedLogs);
-
+        // Show loading state dialog
         setActiveDialog({
           type: 'success',
-          message: 'Status lokaal bijgewerkt. Cloud synchroniseren...',
-          onConfirm: () => setActiveDialog(null)
+          message: 'Bezig met verzenden van e-mail...',
+          onConfirm: null
         });
 
         try {
+          // 1. Trigger email submission first
+          await submitTripLog(log);
+
+          // 2. Email successful! Now update status to 'submitted'
+          const now = new Date().toISOString();
+          const localLog = {
+            ...log,
+            status: 'submitted',
+            submittedAt: now,
+            dateModified: now
+          };
+
           const { data: { user } } = await supabase.auth.getUser();
           if (!user) throw new Error('Geen actieve gebruiker gevonden.');
 
@@ -586,20 +632,21 @@ function App() {
               const finalMappedLog = mapDbFormToState(finalForm);
               setLogs(prevLogs => prevLogs.map(l => l.id === log.id ? finalMappedLog : l));
             }
+          } else {
+            // If synced direct update, keep local logs updated
+            setLogs(prevLogs => prevLogs.map(l => l.id === log.id ? localLog : l));
           }
-
-          await submitTripLog(localLog);
 
           setActiveDialog({
             type: 'success',
-            message: 'Trip log successfully submitted.',
+            message: 'Rittenstaat succesvol verzonden.',
             onConfirm: () => setActiveDialog(null)
           });
         } catch (err) {
-          console.error('Supabase submission sync failed:', err.message);
+          console.error('Submission failed:', err);
           setActiveDialog({
             type: 'error',
-            message: `Lokaal ingezonden. Cloud synchronisatie mislukt: ${err.message}. Probeer het later opnieuw.`,
+            message: `Verzenden mislukt: ${err.message || err}. De status is ongewijzigd gebleven.`,
             onConfirm: () => setActiveDialog(null)
           });
         }
