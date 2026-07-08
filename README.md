@@ -229,7 +229,7 @@ We welcome contributions to improve the application. Please follow the standard 
 * **Pull Request (PR):** When making a contribution, you must create a Pull Request targeting the `develop` branch. 
 * **Merge Process:** After the Pull Request is reviewed, the author of the branch is responsible for merging it into the `develop` branch.
 * **Production Release:** Only after successful approval and integration into `develop` will the changes be pushed to the `master` branch.
-* Currently, code review is conducted by the project creator (`Milad`).
+* Currently, code review is conducted by the project creator (`Admins of Taxi Livo`).
 * In the future, administrators and maintainers from Taxi Livo will also participate in the contribution review process.
 
 ---
