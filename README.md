@@ -102,8 +102,8 @@ Follow these steps to run the project locally on your machine.
 ### Setup Instructions
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-username/taxi-app-1.0.git
-   cd taxi-app-1.0
+   git clone https://github.com/your-username/taxi-app.git
+   cd taxi-app
    ```
 
 2. **Configure Environment Variables:**
