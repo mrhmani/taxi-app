@@ -356,14 +356,14 @@ function App() {
   const handleResetLog = () => {
     setActiveDialog({
       type: 'confirm',
-      message: 'Are you sure you want to reset this rittenstaat?',
+      message: 'Weet je zeker dat je deze rittenstaat wilt resetten?',
       onConfirm: () => {
         localStorage.removeItem('taxilivo_draft');
         setCurrentLog(null);
         setFormResetIndex(prev => prev + 1);
         setActiveDialog({
           type: 'success',
-          message: 'Rittenstaat successfully reset.',
+          message: 'Rittenstaat succesvol gereset.',
           onConfirm: () => setActiveDialog(null)
         });
       },
@@ -668,7 +668,7 @@ function App() {
   const handleDeleteLog = (id) => {
     setActiveDialog({
       type: 'confirm',
-      message: 'Are you sure you want to permanently delete this trip log?',
+      message: 'Weet je zeker dat je deze rittenstaat definitief wilt verwijderen?',
       onConfirm: async () => {
         // 1. Delete locally first
         const updatedLogs = logs.filter(log => log.id !== id);
@@ -693,7 +693,7 @@ function App() {
 
           setActiveDialog({
             type: 'success',
-            message: 'Trip log successfully deleted.',
+            message: 'Rittenstaat succesvol verwijderd.',
             onConfirm: () => setActiveDialog(null)
           });
         } catch (err) {
@@ -715,7 +715,7 @@ function App() {
 
     setActiveDialog({
       type: 'confirm',
-      message: `Are you sure you want to permanently delete ${count} selected trip logs?`,
+      message: `Weet je zeker dat je de ${count} geselecteerde rittenstaten definitief wilt verwijderen?`,
       onConfirm: async () => {
         // 1. Delete locally first
         const updatedLogs = logs.filter(log => !ids.includes(log.id));
@@ -741,7 +741,7 @@ function App() {
 
           setActiveDialog({
             type: 'success',
-            message: 'Trip logs successfully deleted.',
+            message: 'Rittenstaten succesvol verwijderd.',
             onConfirm: () => setActiveDialog(null)
           });
         } catch (err) {

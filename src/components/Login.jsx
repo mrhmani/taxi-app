@@ -179,13 +179,13 @@ function Login({ onLogin, isRecovering = false, onPasswordUpdated }) {
         {view === 'login' ? (
           <>
             <div className="welcome-header">
-              <h2 className="login-title">Welcome</h2>
-              <p className="welcome-subtitle">Sign in with your username and password to continue.</p>
+              <h2 className="login-title">Welkom</h2>
+              <p className="welcome-subtitle">Log in met uw gebruikersnaam en wachtwoord om door te gaan.</p>
             </div>
             
             <form onSubmit={handleLoginSubmit} className="login-form" noValidate>
               <div className="form-group">
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username">Gebruiksnaam</label>
                 <input
                   type="text"
                   id="username"
@@ -198,12 +198,12 @@ function Login({ onLogin, isRecovering = false, onPasswordUpdated }) {
                   }}
                   disabled={isProcessing}
                   required
-                  placeholder="Enter your username"
+                  placeholder="Voer uw gebruiksnaam in"
                 />
                 {usernameError && <span className="error-message">{usernameError}</span>}
               </div>
               <div className="form-group">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">Wachtwoord</label>
                 <input
                   type="password"
                   id="password"
@@ -216,14 +216,14 @@ function Login({ onLogin, isRecovering = false, onPasswordUpdated }) {
                   }}
                   disabled={isProcessing}
                   required
-                  placeholder="Enter your password"
+                  placeholder="Voer uw wachtwoord in"
                 />
                 {passwordError && <span className="error-message">{passwordError}</span>}
                 {generalError && <span className="error-message">{generalError}</span>}
               </div>
               
               <button type="submit" className="login-btn" disabled={isProcessing}>
-                {isProcessing ? <span className="spinner"></span> : 'Login'}
+                {isProcessing ? <span className="spinner"></span> : 'Inloggen'}
               </button>
               
               <div className="contact-dispatch">
@@ -238,9 +238,9 @@ function Login({ onLogin, isRecovering = false, onPasswordUpdated }) {
                   }}
                   disabled={isProcessing}
                 >
-                  Forgot Password?
+                  Wachtwoord vergeten?
                 </button>
-                <p className="contact-dispatch-text">Forgot your username? Please contact Taxi Livo Dispatch.</p>
+                <p className="contact-dispatch-text">Je gebruiksnaam vergeten? Neem contact op met de Taxi Livo Centrale.</p>
               </div>
             </form>
           </>

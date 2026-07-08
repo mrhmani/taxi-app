@@ -81,7 +81,7 @@ function Navigation({ currentView, onViewChange, onLogout }) {
 
           <div className="nav-right">
             <button className="logout-btn" onClick={handleLogoutClick}>
-              Logout
+              Uitloggen
             </button>
           </div>
         </div>
