@@ -224,8 +224,11 @@ We welcome contributions to improve the application. Please follow the standard 
 3. **Commit your Changes** using clear and descriptive commit messages.
 4. **Push to your Branch** and submit a **Pull Request (PR)** targeting the `develop` branch.
 
-### Review Process
-* Every Pull Request will undergo manual review before being merged.
+### Workflow Rules & Review Process
+* **Develop Branch First:** All contributions and new changes must go to the `develop` branch first.
+* **Pull Request (PR):** When making a contribution, you must create a Pull Request targeting the `develop` branch. 
+* **Merge Process:** After the Pull Request is reviewed, the author of the branch is responsible for merging it into the `develop` branch.
+* **Production Release:** Only after successful approval and integration into `develop` will the changes be pushed to the `master` branch.
 * Currently, code review is conducted by the project creator (`Milad`).
 * In the future, administrators and maintainers from Taxi Livo will also participate in the contribution review process.
 
