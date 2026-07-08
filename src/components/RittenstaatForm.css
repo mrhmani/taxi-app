@@ -627,6 +627,14 @@
   .paper-table-container {
     padding-bottom: 10px;
   }
+  .col-loc, .col-time {
+    min-width: 120px;
+    width: 120px;
+  }
+  /* Force inputs inside to not shrink below the column width */
+  .col-loc input, .col-time input {
+    min-width: 120px;
+  }
   .pakbon-header {
     flex-direction: column;
     gap: 15px;

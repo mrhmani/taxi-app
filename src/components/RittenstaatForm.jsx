@@ -493,28 +493,28 @@ function RittenstaatForm({ initialData, onSave, onReset, onSend, onFormChange })
               {trips.map((trip, index) => (
                 <tr key={trip.id}>
                   <td className="col-nr cell-centered">{index + 1}</td>
-                  <td>
+                  <td className="col-time">
                     <input type="time" value={trip.beginTijd} onChange={e => handleTripChange(trip.id, 'beginTijd', e.target.value)} />
                   </td>
-                  <td>
+                  <td className="col-loc">
                     <input type="text" value={trip.van} onChange={e => handleTripChange(trip.id, 'van', e.target.value)} />
                   </td>
-                  <td>
+                  <td className="col-loc">
                     <input type="text" value={trip.naar} onChange={e => handleTripChange(trip.id, 'naar', e.target.value)} />
                   </td>
-                  <td>
+                  <td className="col-time">
                     <input type="time" value={trip.eindTijd} onChange={e => handleTripChange(trip.id, 'eindTijd', e.target.value)} />
                   </td>
-                  <td>
+                  <td className="col-price">
                     <input type="number" step="0.01" value={trip.ritprijsContant} onChange={e => handleTripChange(trip.id, 'ritprijsContant', e.target.value)} />
                   </td>
-                  <td>
+                  <td className="col-price">
                     <input type="number" step="0.01" value={trip.ritprijsRekening} onChange={e => handleTripChange(trip.id, 'ritprijsRekening', e.target.value)} />
                   </td>
-                  <td>
+                  <td className="col-price">
                     <input type="number" step="0.01" value={trip.ritprijsPin} onChange={e => handleTripChange(trip.id, 'ritprijsPin', e.target.value)} />
                   </td>
-                  <td>
+                  <td className="col-opm">
                     <input type="text" value={trip.rekeninghouderOpmerkingen} onChange={e => handleTripChange(trip.id, 'rekeninghouderOpmerkingen', e.target.value)} />
                   </td>
                   <td className="col-action print-hide">
