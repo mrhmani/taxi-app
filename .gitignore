@@ -35,3 +35,7 @@ serviceAccountKey.json
 *.njsproj
 *.sln
 *.sw?
+
+# Supabase
+supabase/.temp/
+
