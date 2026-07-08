@@ -138,11 +138,61 @@ Follow these steps to run the project locally on your machine.
      ```
      Serves the built application locally for manual quality checks.
 
-   * **Network Preview (PWA Testing):**
-     ```bash
-     npm run preview -- --host
-     ```
-     Serves the build on your local network. This is the recommended way to test the PWA installation flow on physical mobile devices connected to the same Wi-Fi.
+    * **Network Preview (PWA Testing):**
+      ```bash
+      npm run preview -- --host
+      ```
+      Serves the build on your local network. This is the recommended way to test the PWA installation flow on physical mobile devices connected to the same Wi-Fi.
+
+### Using a Local Database (Alternative)
+
+Yes, it is absolutely possible to use a local database instead of the live Supabase cloud service. However, because this is a client-side React app that queries the database directly using the `@supabase/supabase-js` client, there are three primary ways a developer can achieve this:
+
+#### Option 1: Supabase Local Development (Recommended & Easiest)
+Since Supabase is open-source and built on top of PostgreSQL, they provide a local development environment that runs on Docker.
+
+This option allows developers to run a local PostgreSQL database along with local mock versions of Supabase services (Auth, Storage, and PostgREST API) on their own machine. No changes to the frontend React code are required.
+
+**How a developer sets it up:**
+1. Install Docker Desktop on their local machine.
+2. Initialize Supabase CLI in the project directory:
+   ```bash
+   npx supabase init
+   ```
+3. Start the local stack:
+   ```bash
+   npx supabase start
+   ```
+   *This will download and run Docker containers containing PostgreSQL, Auth (GoTrue), and the API Gateway.*
+4. Update the local environment variables in the `.env` file to point to the local instance (e.g., `http://127.0.0.1:54321` and the local anon key).
+5. Run the migrations/seed files to populate the local PostgreSQL database:
+   ```bash
+   npx supabase db push
+   ```
+
+#### Option 2: Replacing Supabase Entirely with a Raw Postgres DB
+If a developer wants to use standard, direct PostgreSQL (e.g., via PGAdmin, Drizzle ORM, Prisma, or a standard connection string) and bypass Supabase completely, they cannot do it directly from the browser code.
+
+**Why?** Browsers cannot make direct TCP connections to a standard PostgreSQL port (typically `5432`) due to security restrictions and protocol incompatibility. Sharing database credentials (username/password) directly in frontend code is also a security vulnerability.
+
+To do this, the developer would need to:
+1. Create a backend API server (e.g., Node.js/Express, Python/FastAPI, Go, or Next.js API Routes).
+2. Use a PostgreSQL driver or ORM (like `pg`, Prisma, or Drizzle) inside that backend to query the local database.
+3. Refactor the frontend to fetch data from their backend API server (e.g. using `fetch()` or `axios`) instead of using the `supabase` client library.
+
+#### Option 3: Mocking for Local Testing
+If the goal is simply writing unit/integration tests without needing a running database at all, a developer can mock the Supabase client inside their test suites (e.g. using Vitest or Jest) to return mock data:
+
+```javascript
+// Example test mock
+vi.mock('./src/supabase.js', () => ({
+  supabase: {
+    from: () => ({
+      select: () => Promise.resolve({ data: [{ id: 1, name: 'Mock Taxi' }], error: null })
+    })
+  }
+}));
+```
 
 ---
 
