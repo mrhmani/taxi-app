@@ -230,7 +230,7 @@ const RittenstaatPage = ({ log }) => {
 };
 
 const PakbonPage = ({ pakbon }) => (
-  <Page size="A4" style={styles.pagePortrait}>
+  <Page size={[595.27, 450]} style={styles.pagePortrait}>
     {/* Header section */}
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 }}>
       {/* Left side details */}
