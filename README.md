@@ -56,7 +56,7 @@ The application is built on a modern, serverless architecture for ease of mainte
 
 ### Deployment URL
 The live production application can be accessed at:
-👉 **([url](https://taxi-app-puce.vercel.app))]*
+👉 **([[url]([url](https://taxi-app-puce.vercel.app))](https://taxi-app-puce.vercel.app))]*
 
 ---
 
