@@ -1,5 +1,6 @@
 # Taxi Livo Trip Sheet App
 
+[![Google Antigravity AI](https://img.shields.io/badge/Google%20Antigravity%20AI-Gemini%203.1%20Pro-8A2BE2?style=flat-square&logo=google)](https://deepmind.google/)
 [![Node.js](https://img.shields.io/badge/Node.js-v20.x-green?style=flat-square&logo=node.js)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-v19.x-blue?style=flat-square&logo=react)](https://react.dev/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Auth-green?style=flat-square&logo=supabase)](https://supabase.com/)
@@ -44,6 +45,7 @@ This digital solution reduces administrative overhead, minimizes paperwork error
 
 The application is built on a modern, serverless architecture for ease of maintenance and rapid deployments.
 
+* **AI Assistant:** Google Antigravity AI Agent powered by Gemini 3.1 Pro.
 * **Frontend Framework:** React (v19) with Vite as the build tool.
 * **Runtime Environment:** Node.js.
 * **Package Manager:** npm.
