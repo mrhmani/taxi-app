@@ -317,7 +317,11 @@ We would like to express our gratitude to **Taxi Livo** for their trust,
 cooperation, and the opportunity to develop this digital solution aimed at
 improving operational workflows.
 
-If you have any questions about this project, would like to discuss the implementation, or are interested in collaborating on a similar solution, feel free to get in touch at [info@bymilad.com](mailto:info@bymilad.com)
+If you have any questions about this project, would like to discuss the
+implementation, or are interested in collaborating on a similar solution, feel
+free to get in touch at [info@bymilad.com](mailto:info@bymilad.com)
+
+---
 
 <div align="center">
   <img src="public/Login.png" width="24%" alt="Login Page">
