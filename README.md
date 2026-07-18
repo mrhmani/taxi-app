@@ -321,7 +321,7 @@ operational workflows.
 
 <div align="center">
   <img src="public/Login.png" width="24%" alt="Login Page">
-  <img src="public/Form.png" width="24%" alt="Form">
+  <img src="public/forms.PNG" width="24%" alt="Form">
   <img src="public/Pakbon.png" width="24%" alt="Pakbon">
   <img src="public/Trip%20Log%20Page.png" width="24%" alt="Trip Log Page">
 </div>
